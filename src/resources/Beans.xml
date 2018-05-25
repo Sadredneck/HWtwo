@@ -1,9 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="HorseEntity" class="com.epam.hwtwo.Entity.Horse">
-        <property name="breed" value="nord"></property>
-        <property name="nickName" value="Shrek"></property>
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="random" class="java.util.Random"/>
+
+    <bean id="kon1" class="com.epam.hwtwo.Entity.Horse" scope="prototype">
+        <property name="nickName" value="pinkie"/>
+        <property name="breed" value="blue"/>
+    </bean>
+    <bean id="kon2" class="com.epam.hwtwo.Entity.Horse" scope="prototype">
+        <property name="nickName" value="pie"/>
+        <property name="breed" value="red"/>
+    </bean>
+    <bean id="rider1" class="com.epam.hwtwo.Entity.Rider" scope="prototype">
+        <property name="firstName" value="Ry"/>
+        <property name="lastName" value="Der"/>
+    </bean>
+    <bean id="rider2" class="com.epam.hwtwo.Entity.Rider" scope="prototype">
+        <property name="firstName" value="Gon"/>
+        <property name="lastName" value="Schick"/>
+    </bean>
+
+    <util:list id="horseList" value-type="com.epam.hwtwo.Entity.Horse" scope="prototype">
+        <ref bean="kon1"/>
+        <ref bean="kon2"/>
+    </util:list>
+    <util:list id="riderList" value-type="com.epam.hwtwo.Entity.Rider" scope="prototype">
+        <ref bean="rider1"/>
+        <ref bean="rider2"/>
+    </util:list>
+
+    <bean id="horseService" class="com.epam.hwtwo.Services.HorseService">
+        <property name="horses" ref="horseList"/>
+        <property name="random" ref="random"/>
+    </bean>
+    <bean id="raceService" class="com.epam.hwtwo.Services.RaceService">
+        <property name="random" ref="random"/>
+        <property name="riderService" ref="riderService"/>
+        <property name="horseService" ref="horseService"/>
+    </bean>
+    <bean id="riderService" class="com.epam.hwtwo.Services.RiderService">
+        <property name="riders" ref="riderList"/>
+        <property name="random" ref="random"/>
+    </bean>
+    <bean id="emulationService" class="com.epam.hwtwo.Services.EmulationService">
+        <property name="horseService" ref="horseService"/>
+        <property name="riderService" ref="riderService"/>
+        <property name="raceService" ref="raceService"/>
+        <property name="random" ref="random"/>
     </bean>
 </beans>
